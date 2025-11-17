@@ -77,3 +77,8 @@ YOLOv5/venv/
 YOLOv5/data/images/
 YOLOv5/data/videos/
 YOLOv5/data/*.cache
+YOLOv5/data/coco/
+YOLOv5/data/coco128/
+YOLOv5/*.zip
+YOLOv5/*.tar
+YOLOv5/*.tar.gz
