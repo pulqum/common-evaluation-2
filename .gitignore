@@ -46,6 +46,7 @@ captures/
 
 # IDE
 .vscode/
+!YOLOv5/.vscode/
 .idea/
 *.swp
 *.swo
@@ -82,3 +83,4 @@ YOLOv5/data/coco128/
 YOLOv5/*.zip
 YOLOv5/*.tar
 YOLOv5/*.tar.gz
+YOLOv5/.env
