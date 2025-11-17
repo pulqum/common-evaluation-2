@@ -3,6 +3,10 @@ import cv2
 import pathlib
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 class ChangeDetection:
     result_prev = []
@@ -12,6 +16,16 @@ class ChangeDetection:
     token = ''
     title = ""
     text = ""
+    
+    # 위험도별 객체 분류 (점수 포함)
+    DANGER_OBJECTS = {
+        'person': 10, 'knife': 15, 'scissors': 12, 'baseball bat': 13,
+        'gun': 20, 'rifle': 20
+    }  # 위험
+    WARNING_OBJECTS = {
+        'car': 5, 'truck': 6, 'motorcycle': 5, 'dog': 7, 'cat': 3,
+        'bear': 15, 'backpack': 4
+    }  # 경고
 
     def __init__(self, names):
         self.result_prev = [0 for i in range(len(names))]
@@ -27,13 +41,45 @@ class ChangeDetection:
         self.title = ""
         self.text = ""
         change_flag = 0 #변화 감지 플레그
+        detected_objects = [] #탐지된 객체 리스트
         i = 0
         while i < len(self.result_prev):
             if self.result_prev[i] == 0 and detected_current[i] == 1:
                 change_flag = 1
-                self.title = names[i]
-                self.text += names[i] + ", "
+                detected_objects.append(names[i])
             i += 1
+
+        if detected_objects:
+            # 위험도 점수 계산
+            total_score = 0
+            level_icon = "ℹ️"
+            level_text = "감지"
+            
+            for obj in detected_objects:
+                if obj in self.DANGER_OBJECTS:
+                    total_score += self.DANGER_OBJECTS[obj]
+                elif obj in self.WARNING_OBJECTS:
+                    total_score += self.WARNING_OBJECTS[obj]
+                else:
+                    total_score += 1  # 기본 점수
+            
+            # 점수에 따른 위험도 판단
+            if total_score >= 10:
+                level_icon = "🚨"
+                level_text = "위험"
+            elif total_score >= 5:
+                level_icon = "⚠️"
+                level_text = "경고"
+            
+            # title: 위험도 + 점수 + 첫 번째 객체 + 개수
+            if len(detected_objects) == 1:
+                self.title = f"{level_icon} {level_text}(점수:{total_score}) - {detected_objects[0]} 탐지"
+            else:
+                self.title = f"{level_icon} {level_text}(점수:{total_score}) - {detected_objects[0]} 외 {len(detected_objects)-1}개"
+            
+            # text: 시간 + 점수 + 객체 목록
+            now = datetime.now()
+            self.text = f"{now.strftime('%H:%M:%S')} {level_text} [위험도: {total_score}점] - {', '.join(detected_objects)}"
 
         self.result_prev = detected_current[:] #객체 검출 상태 저장
         if change_flag == 1:

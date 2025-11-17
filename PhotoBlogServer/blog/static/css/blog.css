@@ -263,3 +263,75 @@ body {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
+
+/* 탐지 게시글 스타일 */
+.detection-post {
+	position: relative;
+	border-left: 4px solid #ccc;
+	transition: all 0.3s ease;
+}
+
+.detection-post.danger-level {
+	background: linear-gradient(135deg, rgba(255,59,48,0.08) 0%, rgba(255,59,48,0.02) 100%);
+	border-left-color: #ff3b30;
+}
+
+.detection-post.danger-level:hover {
+	background: linear-gradient(135deg, rgba(255,59,48,0.12) 0%, rgba(255,59,48,0.04) 100%);
+	box-shadow: 0 4px 20px rgba(255,59,48,0.2);
+}
+
+.detection-post.warning-level {
+	background: linear-gradient(135deg, rgba(255,149,0,0.08) 0%, rgba(255,149,0,0.02) 100%);
+	border-left-color: #ff9500;
+}
+
+.detection-post.warning-level:hover {
+	background: linear-gradient(135deg, rgba(255,149,0,0.12) 0%, rgba(255,149,0,0.04) 100%);
+	box-shadow: 0 4px 20px rgba(255,149,0,0.2);
+}
+
+.detection-post.info-level {
+	background: linear-gradient(135deg, rgba(0,122,255,0.06) 0%, rgba(0,122,255,0.01) 100%);
+	border-left-color: #007aff;
+}
+
+.detection-post.info-level:hover {
+	background: linear-gradient(135deg, rgba(0,122,255,0.10) 0%, rgba(0,122,255,0.03) 100%);
+	box-shadow: 0 4px 20px rgba(0,122,255,0.15);
+}
+
+/* 탐지 배지 */
+.detection-badge {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 10;
+}
+
+.detection-badge span {
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+
+.badge-danger {
+	background: rgba(255,59,48,0.9);
+	color: white;
+	box-shadow: 0 2px 8px rgba(255,59,48,0.3);
+}
+
+.badge-warning {
+	background: rgba(255,149,0,0.9);
+	color: white;
+	box-shadow: 0 2px 8px rgba(255,149,0,0.3);
+}
+
+.badge-info {
+	background: rgba(0,122,255,0.9);
+	color: white;
+	box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+}

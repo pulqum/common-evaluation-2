@@ -15,14 +15,36 @@
             <div class="masonry-grid-sizer"></div>
             {% for post in posts %}
             <div class="masonry-grid-item" data-published="{{ post.published_date|date:'U' }}" data-pk="{{ post.pk }}">
-                <div class="post is-clickable" data-href="{% url 'post_detail' pk=post.pk %}">
-                    <div class="date">{{ post.published_date }}</div>
-                    <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-                    {% if post.image and post.image.name and post.image.name != 'intruder_image/default_error.png' %}
-                        <img src="{{ post.image.url }}" class="post-image" alt="{{ post.title }}" onerror="this.remove();">
-                    {% endif %}
-                    <p class="post-text">{{ post.text|linebreaksbr }}</p>
-                </div>
+                {% if '🚨' in post.title or '⚠️' in post.title or '위험' in post.title or '경고' in post.title or '탐지' in post.title %}
+                    {# 탐지 게시글 스타일 #}
+                    <div class="post is-clickable detection-post {% if '🚨' in post.title %}danger-level{% elif '⚠️' in post.title %}warning-level{% else %}info-level{% endif %}" data-href="{% url 'post_detail' pk=post.pk %}">
+                        <div class="detection-badge">
+                            {% if '🚨' in post.title %}
+                                <span class="badge-danger">위험 탐지</span>
+                            {% elif '⚠️' in post.title %}
+                                <span class="badge-warning">경고 탐지</span>
+                            {% else %}
+                                <span class="badge-info">일반 탐지</span>
+                            {% endif %}
+                        </div>
+                        <div class="date">{{ post.published_date }}</div>
+                        <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                        {% if post.image and post.image.name and post.image.name != 'intruder_image/default_error.png' %}
+                            <img src="{{ post.image.url }}" class="post-image" alt="{{ post.title }}" onerror="this.remove();">
+                        {% endif %}
+                        <p class="post-text">{{ post.text|linebreaksbr }}</p>
+                    </div>
+                {% else %}
+                    {# 일반 게시글 스타일 #}
+                    <div class="post is-clickable" data-href="{% url 'post_detail' pk=post.pk %}">
+                        <div class="date">{{ post.published_date }}</div>
+                        <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
+                        {% if post.image and post.image.name and post.image.name != 'intruder_image/default_error.png' %}
+                            <img src="{{ post.image.url }}" class="post-image" alt="{{ post.title }}" onerror="this.remove();">
+                        {% endif %}
+                        <p class="post-text">{{ post.text|linebreaksbr }}</p>
+                    </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
