@@ -62,3 +62,18 @@ Thumbs.db
 
 # Test 폴더 제외
 test/
+
+# YOLOv5
+YOLOv5/runs/
+YOLOv5/weights/
+YOLOv5/*.pt
+YOLOv5/*.onnx
+YOLOv5/*.engine
+YOLOv5/*.mlmodel
+YOLOv5/*.tflite
+YOLOv5/wandb/
+YOLOv5/.git/
+YOLOv5/venv/
+YOLOv5/data/images/
+YOLOv5/data/videos/
+YOLOv5/data/*.cache
