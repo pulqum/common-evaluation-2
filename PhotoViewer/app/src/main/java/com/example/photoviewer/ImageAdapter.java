@@ -32,10 +32,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         Post post = postList.get(position);
-        
+
         // 제목 설정
         holder.tvTitle.setText(post.getTitle());
-        
+
         // 날짜 설정 (간단하게 포맷)
         String date = post.getPublishedDate();
         if (date != null && date.length() >= 10) {
@@ -43,20 +43,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         } else {
             holder.tvDate.setText("날짜 없음");
         }
-        
+
         // 내용 미리보기 설정
         holder.tvText.setText(post.getText());
-        
-        // 이미지 설정 (Django와 동일한 로직)
+
+        // 이미지 설정
         Bitmap bitmap = post.getImage();
         if (bitmap != null) {
-            holder.imageView.setVisibility(View.VISIBLE);
             holder.imageView.setImageBitmap(bitmap);
         } else {
-            // Django처럼 이미지 없으면 숨김
-            holder.imageView.setVisibility(View.GONE);
+            // 기본 이미지 또는 플레이스홀더 설정
+            holder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
         }
-        
+
         // 클릭 리스너 설정
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

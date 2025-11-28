@@ -34,7 +34,7 @@ public class PostDetailActivity extends AppCompatActivity {
     private ImageView ivImage;
     private Button btnEdit, btnDelete;
     private ProgressBar progressBar;
-    
+
     private int postId;
     private String postTitle, postText, postImage, postDate;
 
@@ -56,7 +56,7 @@ public class PostDetailActivity extends AppCompatActivity {
         postId = getIntent().getIntExtra("post_id", -1);
         postTitle = getIntent().getStringExtra("post_title");
         postDate = getIntent().getStringExtra("post_date");
-        
+
         if (postId != -1) {
             // ID가 있으면 ID로 로드
             loadPostDetail();
@@ -131,7 +131,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 conn.setRequestProperty("Authorization", "Token " + TOKEN);
 
                 int responseCode = conn.getResponseCode();
-                
+
                 if (responseCode == 200) {
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(conn.getInputStream()));
@@ -166,13 +166,13 @@ public class PostDetailActivity extends AppCompatActivity {
                 if (imageUrl.startsWith("/")) {
                     imageUrl = "http://10.0.2.2:8000" + imageUrl;
                 }
-                
+
                 URL url = new URL(imageUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setReadTimeout(5000);
                 conn.setDoInput(true);
-                
+
                 int responseCode = conn.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     InputStream input = conn.getInputStream();
@@ -230,14 +230,14 @@ public class PostDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean success) {
             progressBar.setVisibility(View.GONE);
-            
+
             if (success) {
-                Toast.makeText(PostDetailActivity.this, 
+                Toast.makeText(PostDetailActivity.this,
                         "게시물이 삭제되었습니다", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
             } else {
-                Toast.makeText(PostDetailActivity.this, 
+                Toast.makeText(PostDetailActivity.this,
                         "삭제 실패", Toast.LENGTH_SHORT).show();
                 btnEdit.setEnabled(true);
                 btnDelete.setEnabled(true);
@@ -271,14 +271,14 @@ public class PostDetailActivity extends AppCompatActivity {
                         response.append(line);
                     }
                     reader.close();
-                    
+
                     JSONArray jsonArray = new JSONArray(response.toString());
                     // 제목과 날짜가 일치하는 게시물 찾기
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonPost = jsonArray.getJSONObject(i);
                         String title = jsonPost.optString("title", "");
                         String date = jsonPost.optString("published_date", "");
-                        
+
                         // 날짜 포맷 맞추기 (YYYY-MM-DD만 비교)
                         if (date.length() >= 10) {
                             date = date.substring(0, 10);
@@ -320,27 +320,27 @@ public class PostDetailActivity extends AppCompatActivity {
 
                 tvTitle.setText(postTitle);
                 tvText.setText(postText);
-                
+
                 if (publishedDate != null && publishedDate.length() >= 10) {
                     tvDate.setText(publishedDate.substring(0, 10));
                 } else {
                     tvDate.setText("날짜 없음");
                 }
 
-                if (!postImage.isEmpty() 
-                    && !postImage.equals("null") 
-                    && !postImage.contains("default_error.png")) {
+                if (!postImage.isEmpty()
+                        && !postImage.equals("null")
+                        && !postImage.contains("default_error.png")) {
                     new LoadImageTask().execute(postImage);
                 } else {
                     ivImage.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(PostDetailActivity.this, 
+                Toast.makeText(PostDetailActivity.this,
                         "데이터 파싱 실패", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(PostDetailActivity.this, 
+            Toast.makeText(PostDetailActivity.this,
                     "게시물을 불러올 수 없습니다", Toast.LENGTH_SHORT).show();
         }
     }

@@ -217,11 +217,11 @@ public class EditPostActivity extends AppCompatActivity {
             btnSelectImage.setEnabled(true);
 
             if (success) {
-                Toast.makeText(EditPostActivity.this, 
+                Toast.makeText(EditPostActivity.this,
                         "게시물이 수정되었습니다", Toast.LENGTH_SHORT).show();
                 finish(); // PostDetailActivity로 돌아가기
             } else {
-                Toast.makeText(EditPostActivity.this, 
+                Toast.makeText(EditPostActivity.this,
                         "수정 실패", Toast.LENGTH_SHORT).show();
             }
         }

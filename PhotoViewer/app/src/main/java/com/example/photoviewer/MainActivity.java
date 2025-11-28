@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private static final int REQUEST_POST_DETAIL = 100;
-    
+
     TextView textView;
     String site_url = "http://10.0.2.2:8000";
     JSONObject post_json;
     String imageUrl = null;
     Bitmap bmImg = null;
     CloadImage taskDownload;
-    
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
@@ -47,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         textView = (TextView) findViewById(R.id.textView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
-        
+
         // Pull-to-Refresh 설정
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -60,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 loadPosts();
             }
         });
-        
+
         // 초기 로드
         loadPosts();
     }
-    
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             loadPosts();
         }
     }
-    
+
     private void loadPosts() {
         if (taskDownload != null && taskDownload.getStatus() == AsyncTask.Status.RUNNING) {
             taskDownload.cancel(true);
@@ -125,33 +125,33 @@ public class MainActivity extends AppCompatActivity {
 
                     String strJson = result.toString();
                     JSONArray aryJson = new JSONArray(strJson);
-                    
+
                     // Post 리스트 초기화
                     postList.clear();
-                    
+
                     // 배열 내 모든 게시물 처리
                     for (int i = 0; i < aryJson.length(); i++) {
                         post_json = (JSONObject) aryJson.get(i);
-                        
+
                         // Post 데이터 추출
                         int postId = post_json.has("id") ? post_json.getInt("id") : -1;
                         String title = post_json.optString("title", "제목 없음");
                         String text = post_json.optString("text", "");
                         String publishedDate = post_json.optString("published_date", "");
-                        
+
                         // 이미지 다운로드
                         Bitmap imageBitmap = null;
                         imageUrl = post_json.getString("image");
                         // default_error.png는 무시
-                        if (!imageUrl.equals("") 
-                            && !imageUrl.equals("null") 
-                            && !imageUrl.contains("default_error.png")) {
+                        if (!imageUrl.equals("")
+                                && !imageUrl.equals("null")
+                                && !imageUrl.contains("default_error.png")) {
                             try {
                                 URL myImageUrl = new URL(imageUrl);
                                 HttpURLConnection imgConn = (HttpURLConnection) myImageUrl.openConnection();
                                 imgConn.setConnectTimeout(5000);
                                 imgConn.setReadTimeout(5000);
-                                
+
                                 int imgResponseCode = imgConn.getResponseCode();
                                 if (imgResponseCode == HttpURLConnection.HTTP_OK) {
                                     InputStream imgStream = imgConn.getInputStream();
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                         }
-                        
+
                         // Post 객체 생성 및 리스트에 추가
                         Post post = new Post(postId, title, text, publishedDate, imageBitmap);
                         postList.add(post);
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(JSONArray result) {
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
-            
+
             if (result == null || postList.isEmpty()) {
                 textView.setText("불러올 게시물이 없습니다.");
             } else {
